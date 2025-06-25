@@ -1,0 +1,19 @@
+html,
+body {
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}
+
+.pagination {
+  display: flex;
+  column-gap: 2px;
+}
+
+.pagination li {
+  padding: 24px;
+  border: 2px solid;
+  font-size: 2rem;
+}
