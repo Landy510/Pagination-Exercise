@@ -1,19 +1,26 @@
 import { useState } from 'react'
 import './App.css'
 
-const pages = [
-  {id: 0},
-  {id: 1},
-  {id: 2},
-  {id: 3},
-  {id: 4},
-]
+const pages = Array.from({ length: 10 }, (_, i) => ({ id: i }));
 
 function App() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   function handleClick(val: number) {
     setCurrentIndex(val);
+  }
+
+  function handleChangeIndex(range: number) {
+    if(range > 0) {
+      if(currentIndex + range < pages.length) {
+        setCurrentIndex(currentIndex + range);
+      }
+    }
+    else {
+      if(currentIndex + range >= 0) {
+        setCurrentIndex(currentIndex + range);
+      }
+    }
   }
 
   function isShow(index: number, range: number = 1): boolean {
@@ -24,17 +31,16 @@ function App() {
   return (
     <>
       <ol className='pagination'>
-        <li style={{
-          display: `${currentIndex >= (0 + 2) ? "block" : "none"}`
-        }}>...</li>
+        <li onClick={() => setCurrentIndex(0)}>&lt;&lt;</li>
+        <li onClick={() => handleChangeIndex(-1)}>&lt;</li>
         {
           pages.map(val => {
             return (
               <li 
+                className='index'
                 key={val.id}
                 style={{
                   display: `${isShow(val.id) ? "block" : "none"}`,
-                  cursor: "pointer",
                   backgroundColor: `${currentIndex === val.id ? "deeppink" : "transparent"}`,
                   color: `${currentIndex === val.id ? "white" : "black"}`
                 }}
@@ -43,9 +49,8 @@ function App() {
             )
           })
         }
-        <li style={{
-          display: `${currentIndex <= (pages.length - 3) ? "block" : "none"}`
-        }}>...</li>
+        <li onClick={() => handleChangeIndex(1)}>&gt;</li>
+        <li onClick={() => setCurrentIndex(pages.length - 1)}>&gt;&gt;</li>
       </ol>
     </>
   )
