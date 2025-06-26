@@ -1,57 +1,54 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react';
+import { Pagination } from './components/Pagination';
+import retrieverUrl from "./assets/labrador Retriever.jpg";
 import './App.css'
 
-const pages = Array.from({ length: 10 }, (_, i) => ({ id: i }));
+const data = Array.from({ length: 10 }, (_, i) => ({ id: i , imageUrl: retrieverUrl}));
 
 function App() {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [content, setContent] = useState<Array<Array<typeof data[0]>>>([]);
+  const [contentIndex, setContentIndex] = useState(0);
 
-  function handleClick(val: number) {
-    setCurrentIndex(val);
-  }
-
-  function handleChangeIndex(range: number) {
-    if(range > 0) {
-      if(currentIndex + range < pages.length) {
-        setCurrentIndex(currentIndex + range);
-      }
-    }
-    else {
-      if(currentIndex + range >= 0) {
-        setCurrentIndex(currentIndex + range);
-      }
-    }
-  }
-
-  function isShow(index: number, range: number = 1): boolean {
-    if(currentIndex === 0) return index <= (currentIndex + range * 2);
-    return index <= currentIndex + range && index >= currentIndex - range;
-  }
+  useEffect(() => {
+    const clonedData = [...data];
+    const newData = [];
+    do {
+      const temp = clonedData.splice(0, 3);
+      newData.push(temp);
+    } while(clonedData.length > 0);
+    setContent(newData);
+  }, [])
 
   return (
     <>
-      <ol className='pagination'>
-        <li onClick={() => setCurrentIndex(0)}>&lt;&lt;</li>
-        <li onClick={() => handleChangeIndex(-1)}>&lt;</li>
+      <div>
         {
-          pages.map(val => {
+          content.map((val, index) => {
             return (
-              <li 
-                className='index'
-                key={val.id}
+              <div 
+                key={index}
                 style={{
-                  display: `${isShow(val.id) ? "block" : "none"}`,
-                  backgroundColor: `${currentIndex === val.id ? "deeppink" : "transparent"}`,
-                  color: `${currentIndex === val.id ? "white" : "black"}`
+                  display: `${index === contentIndex ? 'flex' : 'none'}`,
+                  columnGap: '10px', 
                 }}
-                onClick={() => handleClick(val.id)}
-              >{val.id}</li>
+              >
+                <p>{index}</p>
+                {val.map(item => (
+                  <img 
+                    key={item.id} 
+                    src={item.imageUrl} 
+                    alt={`Image ${item.id}`} 
+                  />
+                ))}
+              </div>
             )
           })
-        }
-        <li onClick={() => handleChangeIndex(1)}>&gt;</li>
-        <li onClick={() => setCurrentIndex(pages.length - 1)}>&gt;&gt;</li>
-      </ol>
+        } 
+      </div>
+      <Pagination 
+        pages={content.length} 
+        handleShowWhichPage={val => setContentIndex(val)}
+      />
     </>
   )
 }
