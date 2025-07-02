@@ -1,0 +1,1 @@
+*,*:before,*:after{margin:0;padding:0}ol,ul{list-style:none}html,body,#root{height:100%}.pagination{display:flex;column-gap:2px;width:fit-content;margin:100px auto}.pagination li{padding:24px;font-size:2rem;cursor:pointer}.pagination .index{border:2px solid}
